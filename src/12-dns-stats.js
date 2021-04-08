@@ -20,8 +20,43 @@
  * }
  *
  */
-function getDNSStats(/* domains */) {
-  throw new Error('Not implemented');
+function getDNSStats(domains) {
+  const obj = {};
+  domains.forEach((item) => {
+    if (/\.[a-z]{2,3}$/.test(item)) {
+      const dns = item.match(/\.[a-z]{2,3}$/);
+      if (dns in obj) {
+        obj[dns] += 1;
+      } else {
+        obj[dns] = 1;
+      }
+    }
+    if (/^[a-z]{2,}\.[a-z]{2,3}$/.test(item)) {
+      const dns = `${item.match(/\.[a-z]{2,3}$/)}.${item.match(/^[a-z]{2,}/)}`;
+      if (dns in obj) {
+        obj[dns] += 1;
+      } else {
+        obj[dns] = 1;
+      }
+    }
+    if (/\.[a-z]{2,}\.[a-z]{2,3}$/.test(item)) {
+      const dns = item.match(/\.[a-z]{2,3}$/) + item.match(/\.[a-z]{2,}/);
+      if (dns in obj) {
+        obj[dns] += 1;
+      } else {
+        obj[dns] = 1;
+      }
+    }
+    if (/^[a-z]{2,}\.[a-z]{2,}\.[a-z]{2,3}$/.test(item)) {
+      const dns = item.match(/\.[a-z]{2,3}$/) + item.match(/\.[a-z]{2,}\./) + item.match(/^[a-z]{2,}/);
+      if (dns in obj) {
+        obj[dns] += 1;
+      } else {
+        obj[dns] = 1;
+      }
+    }
+  });
+  return obj;
 }
 
 module.exports = getDNSStats;

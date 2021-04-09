@@ -1,4 +1,4 @@
-// const ListNode = require('../extensions/list-node');
+const ListNode = require('../extensions/list-node');
 /**
  * Implement the Queue with a given interface via linked list (use ListNode extension above).
  *
@@ -13,15 +13,42 @@
 
 class Queue {
   get size() {
-    throw new Error('Not implemented');
+    let size = 0;
+    function dip(list) {
+      if (list.next === null) {
+        size++;
+        return size;
+      }
+      size++;
+      size = dip(list.next);
+      return size;
+    }
+    return dip(this.list);
   }
 
-  enqueue(/* element */) {
-    throw new Error('Not implemented');
+  enqueue(element) {
+    if (!this.list) {
+      const newList = new ListNode(element);
+      this.list = newList;
+    } else {
+      const newList = new ListNode(element);
+      newList.next = this.list;
+      this.list = newList;
+    }
   }
 
   dequeue() {
-    throw new Error('Not implemented');
+    let currentNode = this.list;
+    let tailValue = currentNode.value;
+    while (currentNode.next) {
+      if (!currentNode.next.next) {
+        tailValue = currentNode.next.value;
+        currentNode.next = null;
+      } else {
+        currentNode = currentNode.next;
+      }
+    }
+    return tailValue;
   }
 }
 
